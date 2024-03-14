@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  <title>ListProducts</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'get-products' %}">ALL-INCLUSIVE</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'get-products' %}">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              ОДЕЖДА
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Брюки</a></li>
+              <li><a class="dropdown-item" href="#">Джемпера</a></li>
+              <li><a class="dropdown-item" href="#">Джинсы</a></li>
+              <li><a class="dropdown-item" href="#">Куртки</a></li>
+              <li><a class="dropdown-item" href="#">Пальто</a></li>
+              <li><a class="dropdown-item" href="#">Рубашки</a></li>
+              <li><a class="dropdown-item" href="#">Футболки</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            ОБУВЬ
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Ботинки</a></li>
+            <li><a class="dropdown-item" href="#">Кроссовки</a></li>
+            <li><a class="dropdown-item" href="#">Мокасины</a></li>
+            <li><a class="dropdown-item" href="#">Туфли</a></li>
+          </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              АКСЕССУАРЫ
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Галстуки</a></li>
+              <li><a class="dropdown-item" href="#">Кошельки</a></li>
+              <li><a class="dropdown-item" href="#">Ремни</a></li>
+              <li><a class="dropdown-item" href="#">Сумки</a></li>
+              <li><a class="dropdown-item" href="#">Шарфы</a></li>
+            </ul>
+          </li>
+          <li class="nav-item row">
+            {% if user.is_authenticated %}
+            <a class="nav-link active col" aria-current="page" href="{% url 'add-product' %}">Добавить</a>
+            {% endif %}
+            {% if not user.is_authenticated %}
+            <a class="nav-link active col" aria-current="page" href="{% url 'login_user' %}">Вход</a>
+            <a class="nav-link active col" aria-current="page" href="{% url 'signup' %}">Регистрация</a>
+            {% else %}
+            <a class="nav-link active col" aria-current="page" href="{% url 'logout_user' %}">Выход</a>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <a class="nav-link active col" aria-current="page" href="">{{ user.username }}</a>
+            {% endif %}
+          </li>
+        </ul>
+        <form class="d-flex" role="search" method="post" action="{% url 'search-product' %}">
+          {% csrf_token %}
+          <input name="search_string" class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
+          <button class="btn btn-success" type="submit">Поиск</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <div class="row col-12 offset-lg-2 col-lg-8">
+    <h3 class="pt-5">Добавление товара</h3>
+    <form method="POST" class="row" action="{% url 'add-product' %}">
+
+      {% csrf_token %}
+
+    <div class="col-12 col-lg-6 pb-3">
+        <label for="inputnameproduct" class="form-label fw-medium">Наименование товара</label>
+        <input type="text" name="name_prod" class="form-control" id="inputnameproduct" placeholder="введите наименование товара">
+    </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputarticle" class="form-label fw-medium">Артикул товара</label>
+        <input type="text" value="{{ product.article }}" name="article" class="form-control" id="inputarticle" placeholder="введите артикул товара">
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputproductcategory" class="form-label fw-medium">Категория</label>
+        <select class="form-select" id="inputproductcategory" name="category_id">
+          <option selected disabled>Выберите категорию</option>
+
+          {% for category in categories %}
+
+          <option value="{{ category.id }}">{{ category.name_category }}</option>
+        {#Тег <option> определяет опцию - "Выберите из ВЫПАДАЮЩЕГО списка". <option> помещаются внутрь <select> #}
+        {#Тег можно использовать без каких-либо атрибутов, но Обычно требуется атрибут value, который указывает, #}
+        {#что отправляется на сервер при отправке формы.#}
+          {% endfor %}
+        </select>
+      </div>
+{#      ПОЯСНЕНИЕ:#}
+{#          value="{{ category.id }}">{{ category.name_category }}#}
+{#          "category.name_category" --> "category" берем из class Category(models.Model):#}
+{#                                   --> имя: name_category = models.CharField(max_length=50)#}
+
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputseason" class="form-label fw-medium">Сезон</label>
+        <select class="form-select" id="inputseason" name="season_id">
+          <option selected disabled>Выберите сезон</option>
+
+          {% for season in seasons %}
+
+          <option value="{{ season.id }}">{{ season.name_season }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputcomposition" class="form-label fw-medium">Состав изделия</label>
+        <select class="form-select" id="inputcomposition" name="product_composition_id">
+          <option selected disabled>Выберите состав изделия</option>
+
+          {% for product_composition in compositions %}
+
+          <option value="{{ product_composition.id }}">{{ product_composition.product_composition }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputsizecloth" class="form-label fw-medium">Размер одежды</label>
+        <select class="form-select" id="inputsizecloth" name="size_cloth_id">
+          <option selected disabled>Выберите размер</option>
+
+          {% for size_cloth in size_clothes %}
+
+          <option value="{{ size_cloth.id }}">{{ size_cloth.size_cloth }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputsizeshoes" class="form-label fw-medium">Размер обуви</label>
+        <select class="form-select" id="inputsizeshoes" name="size_shoes_id">
+          <option selected disabled>Выберите размер</option>
+
+          {% for size_shoes in size_shoes %}
+
+          <option value="{{ size_shoes.id }}">{{ size_shoes.size_shoes }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+        <label for="inputcompany" class="form-label fw-medium">Компания</label>
+        <select class="form-select" id="inputcompany" name="company_id">
+          <option selected disabled>Выберите производителя товара</option>
+
+          {% for company in companies %}
+
+          <option value="{{ company.id }}">{{ company.name_company }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+          <label for="inputcolor" class="form-label fw-medium">Цвет</label>
+          <input type="text" name="color" class="form-control" id="inputcolor" placeholder="введите цвет изделия">
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+          <label for="inputprice" class="form-label fw-medium">Цена</label>
+          <input type="number" name="price" class="form-control" id="inputprice" placeholder="введите цену товара">
+      </div>
+
+      <div class="col-12 col-lg-6 pb-3">
+          <label for="inputproductcount" class="form-label fw-medium">Количество товара</label>
+          <input type="number" name="product_count" class="form-control" id="inputproductcount" placeholder="введите количество товара">
+      </div>
+
+      <div class="col-12 pb-3">
+        <label for="inputdescription" class="form-label fw-medium">Описание товара</label>
+        <input type="text" name="description" class="form-control" id="inputdescription" placeholder="введите краткое описание товара">
+      </div>
+
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+{#                                      При нажатии на SUBMIT данные отправляются на СЕРВЕР командой:#}
+{#                                      см выше:<form method="POST" class="row" action="{% url 'add-product' %}">#}
+
+      </div>
+  </form>
+  </div>
+
+</body>
+</html>
