@@ -8,7 +8,6 @@ class Company(models.Model):                        # КОМПАНИИ/ПРОД�
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=50)
 
-
     class Meta:
         ordering = ['name_company']
 
@@ -29,10 +28,6 @@ class SizeShoes(models.Model):
     size_shoes = models.IntegerField()
 
 
-# class Reserv(models.Model):
-#     is_reserved = models.BooleanField(default=False)
-
-
 class Product(models.Model):
     name_prod = models.CharField(max_length=50)
     article = models.CharField(max_length=50)
@@ -46,8 +41,8 @@ class Product(models.Model):
     size_cloth = models.ForeignKey(SizeCloth, on_delete=models.SET_NULL, null=True) # ForeignKey
     size_shoes = models.ForeignKey(SizeShoes, on_delete=models.SET_NULL, null=True) # ForeignKey
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)      # ForeignKey
-    # photo = models.ImageField(null=True, blank=True)   # (ФОТОГРАФИИ товара)
-    # reserv = models.ForeignKey(Reserv, on_delete=models.SET_NULL, null=True)  # ForeignKey
+    # image = models.ImageField(upload_to='products_images', blank=True)   # (ФОТОГРАФИИ товара)
+
 
     class Meta:
         ordering = ['name_prod']

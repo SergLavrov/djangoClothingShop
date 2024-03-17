@@ -286,7 +286,7 @@ def search_product(request):
             Q(name_prod__icontains=search_string)
             | Q(article__icontains=search_string)
             | Q(color__icontains=search_string)
-            | Q(price__icontains=search_string)
+            # | Q(price__icontains=search_string)
             | Q(category__name_category__icontains=search_string)
             | Q(season__name_season__icontains=search_string)
             | Q(product_composition__product_composition__icontains=search_string)
