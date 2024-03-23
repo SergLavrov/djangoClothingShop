@@ -244,7 +244,7 @@ def add_product(request):  # Функция принимает параметр 
                                                                     # т.е. получаем эти объекты по ID
 
 
-        product = Product(                            # Создаем НОВЫЙ объект Product и передаем ему данные автомобиля
+        product = Product(                            # Создаем НОВЫЙ объект Product и передаем ему данные товара
             name_prod=name_prod,
             article=article,
             description=description,
@@ -266,7 +266,7 @@ def add_product(request):  # Функция принимает параметр 
                                                 # т.е. reverse('get-products') = '/product/get-products/'
 
 """
-Функция для поиска автомобилей по искомому параметру.
+Функция для поиска товаров по искомому параметру.
 
 Параметры:
 - request: объект HTTP-запроса

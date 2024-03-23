@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 
 class Company(models.Model):                        # КОМПАНИИ/ПРОДАВЦЫ
     name_company = models.CharField(max_length=50)
@@ -11,9 +10,8 @@ class Company(models.Model):                        # КОМПАНИИ/ПРОД�
     class Meta:
         ordering = ['name_company']
 
-
 class Category(models.Model):                      # КАТЕГОРИИ ТОВАРОВ (ОДЕЖДА, ОБУВЬ, АКСЕССУАРЫ)
-        name_category = models.CharField(max_length=50)
+    name_category = models.CharField(max_length=50)
 
 class Season(models.Model):
     name_season = models.CharField(max_length=50)
