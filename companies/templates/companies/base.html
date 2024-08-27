@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+   <style>
+     {#.modal {#}
+     {#    opacity: 0;#}
+     {#    visibility: hidden;#}
+     {#    transition: all 0.8s ease 0s;#}
+     {#}#}
+     {##}
+     {#.modal:target {#}
+     {#    opacity: 1;#}
+     {#    visibility: visible;#}
+     {#}#}
+     {##}
+     {#.modal:target .modal-content {#}
+     {#    transform: translate(0px, 0px);#}
+     {#    opacity: 1;#}
+     {#}#}
+
+       {# Расположение ПО ЦЕНТРУ ЭКРАНА самого "Модального окна" #}
+     {#.modal-dialog {#}
+     {#   min-height: 100%;#}
+     {#   display: flex;#}
+     {#   align-items: center;#}
+     {#   justify-content: center;#}
+     {#   padding: 30px 10px;#}
+        {#transition: all 0.8s ease 0s;#}
+     {#}#}
+
+     .modal-content {
+        background-color: lavender;
+        max-width: 800px;
+        {#min-width: 500px;#}
+        {#padding: 10px;#}
+        {#position: relative;#}
+        {#transition: all 0.8s ease 0s;#}
+        {#opacity: 0;#}
+        {#transform: translate(0px, -100%);#}
+     }
+
+  </style>
+
+  <title>ListProducts</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'get-products' %}">ALL-INCLUSIVE</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'get-products' %}">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              ОДЕЖДА
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'get-clothing' %}">Одежда</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="uk-nav-divider dropdown-item" href="{% url 'get-pants' %}">Брюки</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-jumpers' %}">Джемпера</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-jeans' %}">Джинсы</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-jackets' %}">Куртки</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-coats' %}">Пальто</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-shirts' %}">Рубашки</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-tshirts' %}">Футболки</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            ОБУВЬ
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'get-shoes' %}">Обувь</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'get-boots' %}">Ботинки</a></li>
+            <li><a class="dropdown-item" href="{% url 'get-sneakers' %}">Кроссовки</a></li>
+            <li><a class="dropdown-item" href="{% url 'get-moccasins' %}">Мокасины</a></li>
+            <li><a class="dropdown-item" href="{% url 'get-list-shoes' %}">Туфли</a></li>
+          </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              АКСЕССУАРЫ
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'get-accessories' %}">Аксессуары</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'get-ties' %}">Галстуки</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-wallets' %}">Кошельки</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-belts' %}">Ремни</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-bags' %}">Сумки</a></li>
+              <li><a class="dropdown-item" href="{% url 'get-scavers' %}">Шарфы</a></li>
+            </ul>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item ms-auto row">
+            {% if user.is_authenticated %}
+            <a class="nav-link active col" aria-current="page" href="{% url 'add-product' %}">Добавить</a>
+            {% endif %}
+            {% if not user.is_authenticated %}
+{#            <a class="nav-link active col" aria-current="page" href="{% url 'login_user' %}">Вход</a>#}
+
+              <!-- 1 Вар. Вход в "Modal window" for LOGIN через ссылку -->
+{#              1.1#}
+{#            <a class="nav-link active col" aria-current="page" href="#" data-toggle="modal" data-target="#loginModal">Вход</a>#}
+{#              1.2 Так тоже через ссылку работает ! #}
+{#                  Чтобы было в ряд "Вход" "Регистр" ставим класс - class="nav-link active col"#}
+            <a href="#loginModal" class="nav-link active col" data-toggle="modal">Вход</a>
+
+{#            <a class="nav-link active col" aria-current="page" href="{% url 'signup' %}">Регистрация</a>#}
+
+              <!-- 1 Вар. Вход в "Modal window" for REGISTRATION через ссылку -->
+{#              1.1#}
+{#            <a class="nav-link active col" aria-current="page" href="#" data-toggle="modal" data-target="#regModal">Регистрация</a>#}
+{#              1.2#}
+            <a href="#regModal" class="nav-link active col" data-toggle="modal">Регистрация</a>
+
+              <!-- 2 Вар. Вход в "Modal window" for REGISTRATION через кнопку/button -->
+{#              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#regModal">#}
+{#                Регистрация#}
+{#              </button>#}
+            {% else %}
+            <a class="nav-link active col" aria-current="page" href="{% url 'logout_user' %}">Выход</a>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <a class="nav-link active col" aria-current="page" href="">{{ user.username }}</a>
+            {% endif %}
+            <a class="nav-link active col" aria-current="page" href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+          </li>
+{#          <li class="nav-item ms-auto row">#}
+{#            <a class="nav-link" href="#"><i class="fa-solid fa-cart-shopping"></i></a>#}
+{#          </li>#}
+        </ul>
+
+        <form class="d-flex" role="search" method="post" action="{% url 'search-product' %}">
+          {% csrf_token %}
+          <input name="search_string" class="form-control ms-4" type="search" placeholder="Поиск" aria-label="Search">
+          <button class="btn btn-success" type="submit">Поиск</button>
+        </form>
+{#        <ul class="navbar-nav ms-auto">#}
+{#          <li class="nav-item ms-auto row">#}
+{#            <a class="nav-link" href="#"><i class="fa-solid fa-cart-shopping"></i></a>#}
+{#          </li>#}
+{#        </ul>#}
+      </div>
+    </div>
+  </nav>
+
+  {% block content %}
+
+  {% endblock %}
+
+  <!-- 1 Вариант: Modal window for REGISTRATION -->
+
+{#   <div class="modal fade" id="regModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">#}
+{#     <div class="modal-dialog modal-dialog-centered" role="document"> {# modal-dialog-centered - окно по центру экрана ! #}
+{##}
+{#       <div class="modal-content">#}
+{##}
+{#         <div class="modal-header bg-secondary text-white">#}
+{#           <h4 class="modal-title" id="exampleModalLabel">Регистрация</h4>#}
+{#           <button class="btn-close" data-dismiss="modal" aria-label="Закрыть"></button> {# Значек "Х" в верхнем/правом углу ! #}
+{#         </div>#}
+{##}
+{#         <form method="post" action="{% url 'signup' %}">#}
+{#           {% csrf_token %}#}
+{#           <div class="modal-body">#}
+{#             <div class="form-group mb-2">  {# mb-2 = margin-bottom (от 1 до 5)- отступ снизу между строками #}
+{#               <label for="username" class="form-label">Имя пользователя:</label>#}
+{#               <input type="text" class="form-control" id="username" name="username" required>#}
+               {# class="form-control" - для устанавливки стилей к этим элементам! #}
+               {# required -  значит поле обязательно для заполнения! - если на сайте НЕ заполнить это поле, #}
+               {# то выведится сообщение - "Заполните поле"#}
+               {# Обязательное поле "name"- name="username", то название, которое определяет параметр #}
+               {# для передачи данных на сервер !#}
+{#             </div>#}
+{#             <div class="form-group mb-2">#}
+{#               <label for="email" class="form-label">Email</label>#}
+{#               <input type="email" class="form-control" id="email" name="email" required>#}
+{#             </div>#}
+{#             <div class="form-group mb-2">#}
+{#               <label for="password" class="form-label">Пароль:</label>#}
+{#               <input type="password" class="form-control" id="password" name="password" required>#}
+{#             </div>#}
+{#             <div class="form-group mb-2">#}
+{#               <label for="confirm_password" class="form-label">Подтвердите пароль:</label>#}
+{#               <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>#}
+{#             </div>#}
+{#           </div>#}
+{#           <div class="modal-footer">#}
+{#             <button type="submit" class="btn btn-primary">Отправить</button>#}
+{#             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>#}
+             {# type="button" - писать НЕ обязательно ! #}
+{#           </div>#}
+{#         </form>#}
+{##}
+{#       </div>#}
+{##}
+{#     </div>#}
+{#   </div>#}
+
+<!-- 2 Вариант: через FORMS.py - Modal window for REGISTRATION -->
+
+   <div class="modal fade" id="regModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-dialog-centered" role="document">
+
+       <div class="modal-content">
+
+         <div class="modal-header bg-secondary text-white">
+           <h4 class="modal-title" id="exampleModalLabel">Регистрация</h4>
+           <button class="btn-close" data-dismiss="modal" aria-label="Закрыть"></button>
+         </div>
+
+         <form method="post" action="{% url 'signup' %}">
+           {% csrf_token %}
+
+           <div class="modal-body">
+{#          ПРОБА#}
+{#             <div class="form-group mb-2">#}
+{#             <label class="form-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>#}
+{#             {{ form.username }}#}
+{#             </div>#}
+{#             <div class="form-error">#}
+{#               {{ form.username.errors }}#}
+{#             </div>#}
+
+             <div class="form-group mb-2">
+               <label for="username" class="form-label">Имя пользователя:</label>
+               <input type="text" class="form-control" id="username" name="username" required>
+             </div>
+             <div class="form-group mb-2">
+               <label for="email" class="form-label">Email</label>
+               <input type="email" class="form-control" id="email" name="email" required>
+             </div>
+             <div class="form-group mb-2">
+               <label for="password" class="form-label">Пароль:</label>
+               <input type="password" class="form-control" id="password" name="password" required>
+             </div>
+             <div class="form-group mb-2">
+               <label for="confirm_password" class="form-label">Подтвердите пароль:</label>
+               <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+             </div>
+           </div>
+
+           <div class="modal-footer">
+             <button type="submit" class="btn btn-primary">Отправить</button>
+             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+           </div>
+         </form>
+
+       </div>
+
+     </div>
+   </div>
+
+
+
+
+
+
+
+
+
+  <!-- Modal window for LOGIN -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+      <div class="modal-content">
+
+        <div class="modal-header bg-secondary text-white">
+          <h4 class="modal-title" id="exampleModalLabel">Войти на сайт</h4>
+          <button class="btn-close" data-dismiss="modal" aria-label="Закрыть"></button> {# Значек "Х" в верхнем/правом углу !#}
+        </div>
+
+        <form method="post" action="{% url 'login_user' %}">
+          {% csrf_token %}
+
+          <div class="modal-body">
+
+            <div class="form-group mb-2">
+              <label for="username" class="form-label">Имя пользователя:</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+              {# required -  значит поле обязательно для заполнения! #}
+            </div>
+
+            <div class="form-group mb-2">
+              <label for="password" class="form-label">Пароль:</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            
+{#            Справочно - так можно делать при ВХОДЕ на сайт ! Надо разбираться как это работает !?#}
+{#            <div class="form-check mb-2">#}
+{#              <input type="checkbox" class="form-check-input" id="RememberMe">#}
+{#              <label for="RememberMe" class="form-check-label" >Запомнить меня</label>#}
+{#            </div>#}
+{#            Для стилизации нетекстовых полей используйте соответствующие классы, например, #}
+{#            для чекбокса класс - form-check-input, его метке label — класс form-check-label, #}
+{#            а группирующему их тегу div — класс form-check.#}
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Войти</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+          </div>
+        </form>
+
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- 2 script для Модального окна -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+</body>
+</html>
